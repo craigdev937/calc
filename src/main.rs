@@ -12,9 +12,12 @@ slint::slint! {
         in property <string> text;
         min-height: 30px;
         min-width: 30px;
+        in property <brush> background: @linear-gradient(
+            -20deg, #a0a3e4, #3c58e3
+        );
             Rectangle {
                 background: ta.pressed ? red : 
-                    ta.has-hover ? #2b6fb3 : #1d78d3;
+                    ta.has-hover ? background.darker(10%) : background;
                 border-radius: 4px;
                 border-width: 2px;
                 border-color: self.background.darker(20%);
@@ -32,7 +35,7 @@ slint::slint! {
         }
     }
     export component App inherits Window {
-        in property <int> value: 1;
+        in property <int> value: 0;
 
         GridLayout {
             padding: 10px;
@@ -45,24 +48,24 @@ slint::slint! {
                 Button { text: "1"; } 
                 Button { text: "2"; } 
                 Button { text: "3"; } 
-                Button { text: "+"; } 
+                Button { text: "+"; background: yellow; } 
             }
             Row { 
                 Button { text: "4"; } 
                 Button { text: "5"; } 
                 Button { text: "6"; } 
-                Button { text: "-"; } 
+                Button { text: "-"; background: yellow; } 
             }
             Row { 
                 Button { text: "7"; } 
                 Button { text: "8"; } 
                 Button { text: "9"; } 
-                Button { text: "*"; } 
+                Button { text: "*"; background: yellow; } 
             }
             Row { 
                 Button { text: "0"; }
-                Button { text: "="; col: 2; }
-                Button { text: "/"; }
+                Button { text: "="; col: 2; background: green; }
+                Button { text: "/"; background: yellow; }
             }
         }
     }
@@ -101,9 +104,12 @@ fn main() {
             };
             app.set_value(result);
             state.current_value = 0;
+            state.prev_value = result;
             state.operator = Default::default();
         } else {
             state.operator = value.clone();
+            state.prev_value = state.current_value;
+            state.current_value = 0;
         }
     });
     app.run().unwrap();
